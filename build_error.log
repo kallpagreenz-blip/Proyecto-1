@@ -1,0 +1,51 @@
+﻿
+> agrocapital@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.2.0 (Turbopack)
+
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 5.6s
+  Running TypeScript ...
+node.exe : Failed to type check.
+En línea: 1 Carácter: 1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSp 
+   ecified: (Failed to type check.  
+  :String) [], RemoteException
+    + FullyQualifiedErrorId : Nativ 
+   eCommandError
+ 
+
+./src/app/agricultor/registro/page.t
+sx:520:110
+Type error: Property 'roiMin' does 
+not exist on type 'CropData'.
+
+  [90m518 |[0m ...ntent: 
+[32m'space-between'[0m, 
+alignItems: [32m'center'[0m, 
+marginBottom: [32m'8px'[0m }}>
+  [90m519 |[0m 
+...altCrop.emoji}</span>
+[31m[1m>[0m [90m520 |[0m 
+...yle={{ fontSize: 
+[32m'0.75rem'[0m }}>[33mROI[0m 
+{altCrop.roiMin}%+</span>
+  [90m    |[0m                    
+                           
+[31m[1m^[0m
+  [90m521 |[0m ...
+  [90m522 |[0m 
+...[32m0.9rem'[0m, marginBottom: 
+[32m'4px'[0m }}>{altCrop.name}</p>
+  [90m523 |[0m 
+...[32m'var(--text-muted)'[0m 
+}}>[33mCampa├▒a[0m: 
+{altCrop.durationMonths} meses</p>
+Next.js build worker exited with 
+code: 1 and signal: null
