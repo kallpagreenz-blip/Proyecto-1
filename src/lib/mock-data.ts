@@ -514,9 +514,14 @@ export const MOCK_PROJECTS: Project[] = [
 export interface User {
   id: string;
   name: string;
-  email: string;
+  email?: string;
+  dni?: string;
+  phone?: string;
+  password?: string; // Hashed string
   role: 'agricultor' | 'inversor' | 'admin';
   photo?: string;
+  status?: 'activo' | 'inactivo';
+  registeredAt?: string;
 }
 
 export const MOCK_USERS: User[] = [
@@ -538,7 +543,7 @@ export function setCurrentUser(user: User | null) {
     localStorage.setItem('agrocapital_user', JSON.stringify(user));
     // Also save to all known local users for persistence across logins
     const users = getLocalUsers();
-    if (!users.find(u => u.id === user.id)) {
+    if (!users.find(u => u.id === user.id || (user.dni && u.dni === user.dni))) {
       saveLocalUser(user);
     }
   } else {

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { Menu, X, ChevronRight, LogOut, User } from 'lucide-react';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -55,8 +56,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTAs / User Info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* Desktop CTAs / User Info */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }} className="hide-mobile">
           {!user ? (
             <>
               <Link href="/login" style={{ 
@@ -64,7 +65,7 @@ export default function Navbar() {
               }}>
                 INICIAR SESIÓN
               </Link>
-              <Link href="/agricultor/registro" style={{ 
+              <Link href="/agricultor/evaluacion" style={{ 
                 textDecoration: 'none', color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.1em' 
               }}>
                 AGRICULTOR
@@ -109,11 +110,96 @@ export default function Navbar() {
             </Link>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="show-mobile"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: '8px', zIndex: 1010 }}
+        >
+          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Mobile Menu Overlay */}
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: mobileOpen ? 0 : '-100%',
+          width: '100%',
+          height: '100vh',
+          background: 'var(--background)',
+          zIndex: 1005,
+          transition: 'right 0.3s ease-in-out',
+          padding: '80px 24px 40px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '32px',
+          overflowY: 'auto'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', marginBottom: '8px' }}>MENÚ</p>
+            {navLinks.map(link => (
+              <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} style={{
+                fontSize: '1.25rem', fontWeight: 700, color: 'white', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              }}>
+                {link.label} <ChevronRight size={20} color="var(--verde-600)" />
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ height: '1px', background: 'var(--border)' }} />
+
+          {!user ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Link href="/agricultor/evaluacion" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none' }}>
+                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px' }}>
+                  <span>👨‍🌾 SOY AGRICULTOR</span>
+                </button>
+              </Link>
+              <Link href="/inversor/registro" onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none' }}>
+                <button className="btn-outline" style={{ width: '100%', justifyContent: 'center', padding: '16px' }}>
+                  <span>💼 QUIERO INVERTIR</span>
+                </button>
+              </Link>
+              <Link href="/login" onClick={() => setMobileOpen(false)} style={{ 
+                textAlign: 'center', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '12px', textDecoration: 'none'
+              }}>
+                INICIAR SESIÓN
+              </Link>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--surface-2)', padding: '20px', borderRadius: '16px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--verde-600)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <User size={24} />
+                </div>
+                <div>
+                  <p style={{ fontWeight: 800, fontSize: '1.1rem' }}>{user.name}</p>
+                  <p style={{ color: 'var(--verde-400)', fontSize: '0.8rem', textTransform: 'uppercase' }}>{user.role}</p>
+                </div>
+              </div>
+              <Link href={user?.role === 'agricultor' ? '/agricultor/dashboard' : '/inversor/dashboard'} onClick={() => setMobileOpen(false)} style={{ textDecoration: 'none' }}>
+                <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px' }}>
+                  <span>IR AL DASHBOARD</span>
+                </button>
+              </Link>
+              <button 
+                onClick={() => { logout(); setMobileOpen(false); }}
+                style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text-muted)', padding: '12px', borderRadius: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              >
+                <LogOut size={18} /> CERRAR SESIÓN
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .hide-mobile { display: none !important; }
+        }
+        @media (min-width: 1025px) {
+          .show-mobile { display: none !important; }
         }
       `}</style>
     </nav>

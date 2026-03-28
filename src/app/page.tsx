@@ -161,7 +161,7 @@ export default function LandingPage() {
                 <Globe size={16} /> Plataforma de Inversión Agrícola Activa
               </motion.div>
               
-              <h1 className="font-display" style={{
+              <h1 className="font-display hero-title-main" style={{
                 fontSize: 'clamp(3.5rem, 6vw, 5.5rem)',
                 fontWeight: 800,
                 lineHeight: 1.05,
@@ -173,7 +173,7 @@ export default function LandingPage() {
                 cultivan el <span style={{ fontStyle: 'italic', fontWeight: 400 }}>futuro</span>.
               </h1>
 
-              <p style={{
+              <p className="hero-subtitle" style={{
                 fontSize: 'clamp(1.1rem, 2vw, 1.25rem)',
                 color: 'rgba(255,255,255,0.7)',
                 lineHeight: 1.7,
@@ -190,6 +190,7 @@ export default function LandingPage() {
                   <motion.button 
                     whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(74, 222, 128, 0.4)' }}
                     whileTap={{ scale: 0.95 }}
+                    className="hero-cta-btn"
                     style={{ 
                       background: 'var(--verde-500)', border: 'none', color: 'white', 
                       padding: '18px 36px', fontSize: '1.05rem', borderRadius: '8px',
@@ -200,10 +201,11 @@ export default function LandingPage() {
                     Quiero Invertir <ArrowRight size={20} />
                   </motion.button>
                 </Link>
-                <Link href="/agricultor/registro" style={{ textDecoration: 'none' }}>
+                <Link href="/agricultor/evaluacion" style={{ textDecoration: 'none' }}>
                   <motion.button 
                     whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
                     whileTap={{ scale: 0.95 }}
+                    className="hero-cta-btn"
                     style={{ 
                       background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', 
                       color: 'white', padding: '18px 36px', fontSize: '1.05rem', borderRadius: '8px',
@@ -265,6 +267,11 @@ export default function LandingPage() {
         <style dangerouslySetInnerHTML={{__html: `
           @media(min-width: 1024px) {
             .hero-decorations { display: block !important; }
+          }
+          @media(max-width: 768px) {
+            .hero-title-main { font-size: 2.8rem !important; }
+            .hero-subtitle { font-size: 1rem !important; margin-bottom: 32px !important; }
+            .hero-cta-btn { padding: 14px 28px !important; font-size: 0.95rem !important; width: 100%; justify-content: center; }
           }
         `}} />
       </section>

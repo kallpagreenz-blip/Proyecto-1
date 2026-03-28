@@ -132,40 +132,57 @@ export default function AdminDashboard() {
         {/* PROYECTOS TABLE */}
         {activeTab === 'proyectos' && (
           <div className="card" style={{ overflow: 'hidden' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 1fr 120px', padding: '12px 20px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', gap: '12px' }}>
-              {['Agricultor', 'Ubicación', 'Cultivo', 'Inversión', 'ROI', 'Estado', 'Acciones'].map(h => (
+            <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1.2fr 100px 180px 140px', padding: '12px 20px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', gap: '12px' }}>
+              {['Agricultor', 'Cultivo', 'Inversión', 'Plan Negocio', 'ROI', 'Estado / Alertas', 'Acciones'].map(h => (
                 <span key={h} style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</span>
               ))}
             </div>
-            {MOCK_PROJECTS.map(p => (
-              <div key={p.id} className="table-row" style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 1fr 120px', gap: '12px' }}>
-                <div>
-                  <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{p.farmerName}</p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{p.hectares} Ha</p>
+            {projects.map(p => {
+              const planProgress = p.status === 'financiado' ? 85 : p.status === 'activo' ? 40 : 10;
+              const isDelayed = p.status === 'activo' && p.amountRaised < p.amountNeeded * 0.5;
+
+              return (
+                <div key={p.id} className="table-row" style={{ gridTemplateColumns: '1.5fr 1fr 1fr 1.2fr 100px 180px 140px', gap: '12px', background: isDelayed ? 'rgba(239, 68, 68, 0.02)' : 'none' }}>
+                  <div>
+                    <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{p.farmerName}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{p.department} · {p.hectares} Ha</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: '0.875rem' }}>{p.crop.emoji} {p.crop.name}</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>${p.amountRaised.toLocaleString()}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>meta ${p.amountNeeded.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Avance</span>
+                      <span>{planProgress}%</span>
+                    </div>
+                    <div className="progress-bar" style={{ height: '6px' }}>
+                      <div className="progress-fill" style={{ width: `${planProgress}%`, background: planProgress > 70 ? 'var(--verde-500)' : 'var(--oro-500)' }} />
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--verde-400)' }}>{p.roiEstimated}%</span>
+                  <div>
+                    <span className={`badge ${p.status === 'activo' ? 'badge-verde' : p.status === 'buscando' ? 'badge-tierra' : p.status === 'financiado' ? 'badge-blue' : 'badge-verde'}`} style={{ fontSize: '0.7rem', width: 'fit-content', marginBottom: '4px' }}>
+                      {p.status}
+                    </span>
+                    {isDelayed && (
+                      <div style={{ color: '#ef4444', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                         ⚠️ Alerta: Desviación
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button className="btn-primary" style={{ padding: '6px', fontSize: '0.7rem', background: isDelayed ? '#ef4444' : 'var(--verde-600)', width: '100%' }}>
+                      {isDelayed ? 'Acción Correctiva' : 'Seguimiento'}
+                    </button>
+                    <button className="btn-ghost" style={{ padding: '4px', fontSize: '0.7rem', width: '100%' }} onClick={() => setSelectedProject(p)}>Detalles</button>
+                  </div>
                 </div>
-                <div>
-                  <p style={{ fontSize: '0.875rem' }}>📍 {p.department}</p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{p.region}</p>
-                </div>
-                <div>
-                  <p style={{ fontSize: '0.875rem' }}>{p.crop.emoji} {p.crop.name}</p>
-                </div>
-                <div>
-                  <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>${p.amountRaised.toLocaleString()}</p>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>de ${p.amountNeeded.toLocaleString()}</p>
-                </div>
-                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--verde-400)' }}>{p.roiEstimated}%</span>
-                <span className={`badge ${p.status === 'activo' ? 'badge-verde' : p.status === 'buscando' ? 'badge-tierra' : p.status === 'financiado' ? 'badge-blue' : 'badge-verde'}`} style={{ fontSize: '0.7rem', width: 'fit-content' }}>
-                  {p.status}
-                </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <Link href={`/proyectos/${p.id}`} style={{ textDecoration: 'none' }}>
-                    <button className="btn-ghost" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>Ver</button>
-                  </Link>
-                  <button className="btn-ghost" style={{ padding: '6px 12px', fontSize: '0.75rem', color: 'var(--verde-400)' }}>Editar</button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

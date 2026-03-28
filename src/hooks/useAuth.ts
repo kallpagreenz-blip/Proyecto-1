@@ -11,9 +11,11 @@ export function useAuth() {
     setLoading(false);
   }, []);
 
-  const login = (email: string) => {
-    // Check both mock and local users
-    const found = [...MOCK_USERS, ...getLocalUsers()].find(u => u.email === (email || '').toLowerCase());
+  const login = (emailOrDni: string) => {
+    const val = (emailOrDni || '').toLowerCase();
+    const found = [...MOCK_USERS, ...getLocalUsers()].find(u => 
+      u.email === val || u.dni === val
+    );
     if (found) {
       setCurrentUser(found);
       setUser(found);
@@ -28,11 +30,20 @@ export function useAuth() {
     setUser(newUser);
   };
 
+  const checkDni = (dni: string) => {
+    return [...MOCK_USERS, ...getLocalUsers()].some(u => u.dni === dni);
+  };
+
+  const checkEmail = (email: string) => {
+    const val = (email || '').toLowerCase();
+    return [...MOCK_USERS, ...getLocalUsers()].some(u => u.email === val);
+  };
+
   const logout = () => {
     setCurrentUser(null);
     setUser(null);
     if (typeof window !== 'undefined') window.location.reload();
   };
 
-  return { user, loading, login, register, logout };
+  return { user, loading, login, register, checkDni, checkEmail, logout };
 }
